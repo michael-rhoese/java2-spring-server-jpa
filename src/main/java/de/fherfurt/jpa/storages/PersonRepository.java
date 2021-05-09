@@ -18,22 +18,11 @@
  */
 package de.fherfurt.jpa.storages;
 
-import de.fherfurt.jpa.core.H2Controller;
-import de.fherfurt.jpa.core.errors.SqlException;
-import de.fherfurt.jpa.domains.Address;
 import de.fherfurt.jpa.domains.Person;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * <h2>PersonRepository</h2>
@@ -43,23 +32,7 @@ import javax.persistence.TypedQuery;
  * @author Michael Rhöse
  * @version 0.0.0.0, 05/02/2021
  */
-@Slf4j
-public class PersonRepository extends BaseRepository<Person> {
+public interface PersonRepository extends JpaRepository<Person, Long> {
 
-    public PersonRepository() {
-        super(H2Controller.getManager().getEntityManager(), Person.class);
-    }
-
-    public Optional<Person> findBy(String lastName){
-        TypedQuery<Person> query = entityManager.createQuery("SELECT person FROM " + Person.class.getCanonicalName() + " person WHERE person.lastName = :lastname", Person.class);
-        query.setParameter("lastname", lastName);
-
-        List<Person> loaded = query.getResultList();
-
-        if(loaded.isEmpty()){
-            return Optional.empty();
-        }
-
-        return Optional.of(loaded.get(0));
-    }
+    Optional<Person> findByLastName(String lastName);
 }

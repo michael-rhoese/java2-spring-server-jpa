@@ -28,24 +28,31 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 /**
  *
  * @author Michael Rhöse
  */
+@DataJpaTest
 class PersonRepositoryTest {
 
-    PersonRepository repository;
+    @Autowired
+    private PersonRepository personRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
 
     @BeforeEach
     public void beforeEach() {
-        repository = new PersonRepository();
+
     }
 
     @AfterEach
     public void afterEach() {
-        repository.deleteAll();
-        new AddressRepository().deleteAll();
+        personRepository.deleteAll();
+        addressRepository.deleteAll();
     }
 
     @Test
@@ -54,10 +61,10 @@ class PersonRepositoryTest {
         Person given = new Person("Hans", "Musterfrau", "test@gmx.com");
 
         // WHEN
-        Long result = repository.save(given);
+        Person result = personRepository.save(given);
 
         // THEN
-        Assertions.assertThat(result)
+        Assertions.assertThat(result.getId())
                 .isNotNull()
                 .isGreaterThan(0);
     }
@@ -68,16 +75,16 @@ class PersonRepositoryTest {
         Person given1 = new Person("Hans", "Musterfrau", "test@gmx.com");
         Person given2 = new Person("Frauke", "Mustermann", "test2@gmx.com");
 
-        List<Long> idsOfPersisted = new ArrayList<>();
-        idsOfPersisted.add(repository.save(given1));
-        idsOfPersisted.add(repository.save(given2));
+        List<Person> persisted = new ArrayList<>();
+        persisted.add(personRepository.save(given1));
+        persisted.add(personRepository.save(given2));
 
         // WHEN
-        List<Person> result = repository.findAll();
+        List<Person> result = personRepository.findAll();
 
         // WHEN
         Assertions.assertThat(result).isNotNull().isNotEmpty().allMatch(Objects::nonNull);
-        Assertions.assertThat(idsOfPersisted).isNotNull().isNotEmpty().allMatch(Objects::nonNull);
+        Assertions.assertThat(persisted).isNotNull().isNotEmpty().allMatch(Objects::nonNull);
     }
 
     @Test
@@ -86,11 +93,11 @@ class PersonRepositoryTest {
         Person given1 = new Person("Hans", "Musterfrau", "test@gmx.com");
         Person given2 = new Person("Frauke", "Mustermann", "test2@gmx.com");
 
-        repository.save(given1);
-        repository.save(given2);
+        personRepository.save(given1);
+        personRepository.save(given2);
 
         // WHEN
-        Optional<Person> result = repository.findBy("Mustermann");
+        Optional<Person> result = personRepository.findByLastName("Mustermann");
 
         // WHEN
         Assertions.assertThat(result).isPresent();
@@ -111,11 +118,11 @@ class PersonRepositoryTest {
 
         given2.setAddress(address2);
 
-        repository.save(given1);
-        repository.save(given2);
+        personRepository.save(given1);
+        personRepository.save(given2);
 
         // WHEN
-        Optional<Person> result = repository.findBy("Mustermann");
+        Optional<Person> result = personRepository.findByLastName("Mustermann");
 
         // WHEN
         Assertions.assertThat(result).isPresent();

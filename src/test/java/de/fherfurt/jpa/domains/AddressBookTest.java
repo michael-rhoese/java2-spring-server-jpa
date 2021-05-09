@@ -19,21 +19,26 @@
 package de.fherfurt.jpa.domains;
 
 import de.fherfurt.jpa.domains.errors.PersonNotFoundException;
-import de.fherfurt.jpa.storages.AddressbookRepository;
+import de.fherfurt.jpa.services.AddressbookService;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
 
 /**
- *
  * @author Michael Rhöse
  */
 public class AddressBookTest {
-
-    AddressbookRepository addressbookRepository;
+    private AddressbookService addressbookService;
 
     Person maxMustermann;
     Person emmaWeber;
     Person manfredHerold;
+
+    @BeforeEach
+    public void beforeEach(){
+        MockitoAnnotations.openMocks(this);
+    }
 
     private AddressBook prepareAddressBook() {
         final AddressBook res = new AddressBook();

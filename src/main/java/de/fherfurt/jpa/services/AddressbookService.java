@@ -16,10 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package de.fherfurt.jpa.storages;
+package de.fherfurt.jpa.services;
 
 import de.fherfurt.jpa.domains.AddressBook;
+import de.fherfurt.jpa.storages.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * <h2>AdressbookRepository</h2>
@@ -30,13 +33,11 @@ import lombok.extern.slf4j.Slf4j;
  * @version 0.0.0.0, 04/25/2021
  */
 @Slf4j
-public class AddressbookRepository {
+@Service
+public class AddressbookService {
 
-    private final PersonRepository personRepository = new PersonRepository();
-
-    public void save(AddressBook addressBook) {
-        addressBook.getPersons().forEach(personRepository::save);
-    }
+    @Autowired
+    private PersonRepository personRepository;
 
     public AddressBook loadAddressBook() {
         AddressBook res = new AddressBook();

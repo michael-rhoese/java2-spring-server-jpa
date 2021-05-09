@@ -18,20 +18,8 @@
  */
 package de.fherfurt.jpa.storages;
 
-import de.fherfurt.jpa.core.H2Controller;
-import de.fherfurt.jpa.core.errors.SqlException;
 import de.fherfurt.jpa.domains.Address;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
-
-import javax.persistence.EntityManager;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * <h2>AddressRepository</h2>
@@ -41,10 +29,6 @@ import javax.persistence.EntityManager;
  * @author Michael Rhöse
  * @version 0.0.0.0, 05/02/2021
  */
-@Slf4j
-public class AddressRepository extends BaseRepository<Address> {
+public interface AddressRepository extends JpaRepository<Address, Long> {
 
-    public AddressRepository() {
-        super(H2Controller.getManager().getEntityManager(), Address.class);
-    }
 }

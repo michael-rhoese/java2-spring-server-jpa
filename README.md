@@ -1,6 +1,6 @@
 # Punkte
 
-1. Spring zum Projekt hinzufügen
-2. Datenbank configurieren
-3. Repository umbauen
-4. Testing
+1. Spring zum Projekt hinzufügen - OK
+2. Datenbank configurieren - OK
+3. Repository umbauen - OK
+4. Testing - OK

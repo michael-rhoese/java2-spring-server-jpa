@@ -27,18 +27,21 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 /**
  *
- * @author Michael Rhöse
+ * @author Michael RhÃ¶se
  */
+@DataJpaTest
 class AddressRepositoryTest {
 
-    AddressRepository repository;
+    @Autowired
+    private AddressRepository repository;
 
     @BeforeEach
     public void beforeEach() {
-        repository = new AddressRepository();
     }
 
     @AfterEach
@@ -52,10 +55,10 @@ class AddressRepositoryTest {
         Address given = new Address("Leutragraben 1", "Jena", "07745");
 
         // WHEN
-        Long result = repository.save(given);
+        Address result = repository.save(given);
 
         // THEN
-        Assertions.assertThat(result)
+        Assertions.assertThat(result.getId())
                 .isNotNull()
                 .isGreaterThan(0);
     }
@@ -66,20 +69,20 @@ class AddressRepositoryTest {
         Address given1 = new Address("Leutragraben 1", "Jena", "07745");
         Address given2 = new Address("Anger 24 ", "Erfurt", "99084");
 
-        List<Long> idsOfPersisted = new ArrayList<>();
-        idsOfPersisted.add(repository.save(given1));
-        idsOfPersisted.add(repository.save(given2));
+        List<Address> persisted = new ArrayList<>();
+        persisted.add(repository.save(given1));
+        persisted.add(repository.save(given2));
 
         // WHEN
         List<Address> result = repository.findAll();
 
         // WHEN
         Assertions.assertThat(result).isNotNull().isNotEmpty().allMatch(Objects::nonNull);
-        Assertions.assertThat(idsOfPersisted).isNotNull().isNotEmpty().allMatch(Objects::nonNull);
+        Assertions.assertThat(persisted).isNotNull().isNotEmpty().allMatch(Objects::nonNull);
     }
 
     @Test
-    void findByName() {
+    void findById() {
         // GIVEN
         Address given1 = new Address("Leutragraben 1", "Jena", "07745");
         Address given2 = new Address("Anger 24 ", "Erfurt", "99084");
@@ -88,7 +91,7 @@ class AddressRepositoryTest {
         repository.save(given2);
 
         // WHEN
-        Optional<Address> result = repository.findBy(given1.getId());
+        Optional<Address> result = repository.findById(given1.getId());
 
         // WHEN
         Assertions.assertThat(result).isPresent();
